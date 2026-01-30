@@ -7,10 +7,10 @@ CLI for automating a Windows VM from Linux. SSH for commands, HTTP APIs for GUI 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │ Linux Host                                                      │
-│  ┌──────────────────┐  ┌──────────────────┐                    │
-│  │ win-automation   │  │ Hatchet-lite     │                    │
-│  │ CLI              │  │ (Job Queue)      │                    │
-│  └────────┬─────────┘  └────────┬─────────┘                    │
+│  ┌──────────────────┐  ┌──────────────────┐                     │
+│  │ win-automation   │  │ Hatchet-lite     │                     │
+│  │ CLI              │  │ (Job Queue)      │                     │
+│  └────────┬─────────┘  └────────┬─────────┘                     │
 │           │                     │                               │
 └───────────┼─────────────────────┼───────────────────────────────┘
             │                     │
@@ -20,10 +20,10 @@ CLI for automating a Windows VM from Linux. SSH for commands, HTTP APIs for GUI 
             ▼                     ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ Windows VM                                                      │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌───────────────┐ │
-│  │ OpenSSH Server   │  │ Aloha Server     │  │ Playwright    │ │
-│  │                  │  │ + Client         │  │ Server        │ │
-│  └──────────────────┘  └──────────────────┘  └───────────────┘ │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌───────────────┐  │
+│  │ OpenSSH Server   │  │ Aloha Server     │  │ Playwright    │  │
+│  │                  │  │ + Client         │  │ Server        │  │
+│  └──────────────────┘  └──────────────────┘  └───────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -44,21 +44,25 @@ just build
 ## Quick Start
 
 1. **Verify connectivity:**
+
    ```bash
    win-automation doctor
    ```
 
 2. **Run a command on Windows:**
+
    ```bash
    win-automation windows exec -- hostname
    ```
 
 3. **GUI automation via Aloha:**
+
    ```bash
    win-automation aloha run --task "Open Notepad and type hello"
    ```
 
 4. **Queue a job:**
+
    ```bash
    win-automation jobs enqueue --type windows.exec --cmd "dir C:\\"
    ```
@@ -67,10 +71,10 @@ just build
 
 ### Core Commands
 
-| Command | Description |
-|---------|-------------|
-| `doctor` | Verify connectivity (SSH, Aloha, Hatchet, Playwright) |
-| `version` | Print version |
+| Command   | Description                                           |
+| --------- | ----------------------------------------------------- |
+| `doctor`  | Verify connectivity (SSH, Aloha, Hatchet, Playwright) |
+| `version` | Print version                                         |
 
 ### Windows SSH
 
@@ -177,13 +181,13 @@ WIN_AUTOMATION_TIMEOUT=10s
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | Operational failure (network, remote error) |
-| 2 | Usage/config error |
-| 3 | Dependency unavailable |
-| 4 | Timeout |
+| Code | Meaning                                     |
+| ---- | ------------------------------------------- |
+| 0    | Success                                     |
+| 1    | Operational failure (network, remote error) |
+| 2    | Usage/config error                          |
+| 3    | Dependency unavailable                      |
+| 4    | Timeout                                     |
 
 ## Output Conventions
 
@@ -218,6 +222,26 @@ just test      # Run tests
 just fmt       # Format code
 ```
 
+### Updating Dependencies
+
+```bash
+go mod tidy && go mod vendor
+git add go.mod go.sum vendor/
+```
+
+## NixOS
+
+```bash
+# Run directly
+nix run github:alejg/win-automation -- doctor
+
+# Add to NixOS config
+services.win-automation.enable = true;
+services.win-automation.worker.enable = true;
+```
+
+See [NIXOS_INTEGRATION.md](docs/NIXOS_INTEGRATION.md) for full module options.
+
 ## Documentation
 
 - [CONTEXT.md](docs/CONTEXT.md) - Configuration details, logging schema
@@ -227,4 +251,3 @@ just fmt       # Format code
 ## License
 
 MIT
-# winauto
